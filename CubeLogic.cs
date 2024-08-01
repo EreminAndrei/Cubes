@@ -20,12 +20,9 @@ public class CubeLogic : MonoBehaviour
 
         if (_chanceToReborn > random)
         {
-            Reborn?.Invoke(gameObject);
-            Destroy(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
+            Reborn?.Invoke(gameObject);           
+        }        
+            
+        Destroy(gameObject);        
     }
 }

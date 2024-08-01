@@ -10,37 +10,19 @@ public class Fuse : MonoBehaviour
 
     private void OnEnable()
     {
-        _spawner.Spawn += OnSpawn;
+        _spawner.Spawned += OnSpawned;
     }
 
     private void OnDisable()
     {
-        _spawner.Spawn -= OnSpawn;
+        _spawner.Spawned -= OnSpawned;
     }
 
-    private void OnSpawn(Vector3 position)
+    private void OnSpawned(Vector3 position, List<Rigidbody> cubesToMove)
     {
-        Explode(position);
-    }
-
-    private void Explode(Vector3 position)
-    {
-        foreach (Rigidbody explodableObject in GetExplodableObjects(position))
-            explodableObject.AddExplosionForce(_explosionForce, position, _explosionRadius);
-    }
-
-    private List<Rigidbody> GetExplodableObjects(Vector3 position)
-    {
-        Collider[] hits = Physics.OverlapSphere(position, _explosionRadius);
-
-        List<Rigidbody> cubesToMove = new List<Rigidbody>();
-        
-        foreach (Collider hit in hits)
-        {
-            if(hit.attachedRigidbody != null)
-                cubesToMove.Add(hit.attachedRigidbody);            
+        foreach (Rigidbody cube in cubesToMove)
+        { 
+            cube.AddExplosionForce(_explosionForce, position, _explosionRadius);
         }
-
-        return cubesToMove;
-    }
+    }    
 }

@@ -10,7 +10,7 @@ public class Spawner : MonoBehaviour
     [SerializeField] private CubeLogic _cubeLogic;
     [SerializeField] private Material[] _materials = new Material[5];
     
-    public event Action<Vector3> Spawn;
+    public event Action<Vector3, List <Rigidbody>> Spawned;
        
     private void OnEnable()
     {
@@ -22,23 +22,36 @@ public class Spawner : MonoBehaviour
         _cubeLogic.Reborn -= OnReborn;
     }
 
-    private void OnReborn(GameObject Cube)
+    private void OnReborn(GameObject cube)
     {  
-        Cube.transform.localScale /= 2;
+        int minAmountToSpawn = 2;
+        int maxAmountToSpwan = 6;
+        int amountToSpawn = UnityEngine.Random.Range(minAmountToSpawn, maxAmountToSpwan + 1);        
+        
+        List <Rigidbody> cubesToMove = new ();
+        
+        cube.transform.localScale /= 2;
         
         _cubeLogic.ChanceDecrease();
-
-        int amountToSpawn = UnityEngine.Random.Range(2, 7);        
+        
+        Vector3 position = cube.transform.position;
         
         for (int i = 0; i < amountToSpawn; i++)
         {
             int randomMaterial = UnityEngine.Random.Range(0, _materials.Length);
+
+            if (cube.GetComponent<MeshRenderer>() != null)
+            {
+                MeshRenderer rand = cube.GetComponent<MeshRenderer>();
+                rand.material = _materials[randomMaterial];
+            }            
             
-            Cube.GetComponent<MeshRenderer>().material = _materials[randomMaterial];
+            GameObject newCube = Instantiate(cube, position, Quaternion.identity);
             
-            Instantiate(Cube, transform.position, Quaternion.identity);             
+            if (newCube.GetComponent<Rigidbody>() != null)
+                cubesToMove.Add(newCube.GetComponent<Rigidbody>());           
         } 
         
-        Spawn?.Invoke(transform.position);
+        Spawned?.Invoke(position, cubesToMove);
     }    
 }
