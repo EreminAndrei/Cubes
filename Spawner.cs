@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Spawner : MonoBehaviour
 {
@@ -35,21 +32,24 @@ public class Spawner : MonoBehaviour
         _cubeLogic.ChanceDecrease();
         
         Vector3 position = cube.transform.position;
-        
+
         for (int i = 0; i < amountToSpawn; i++)
         {
             int randomMaterial = UnityEngine.Random.Range(0, _materials.Length);
 
             if (cube.GetComponent<MeshRenderer>() != null)
             {
-                MeshRenderer rand = cube.GetComponent<MeshRenderer>();
-                rand.material = _materials[randomMaterial];
-            }            
-            
-            GameObject newCube = Instantiate(cube, position, Quaternion.identity);
-            
-            if (newCube.GetComponent<Rigidbody>() != null)
-                cubesToMove.Add(newCube.GetComponent<Rigidbody>());           
+                MeshRenderer randerer = cube.GetComponent<MeshRenderer>();
+                randerer.material = _materials[randomMaterial];
+            }
+
+            Rigidbody newCube = cube.GetComponent<Rigidbody>();
+
+            if (newCube != null)
+            { 
+                newCube = Instantiate(newCube, position, Quaternion.identity);
+                cubesToMove.Add(newCube);
+            }
         } 
         
         Spawned?.Invoke(position, cubesToMove);
