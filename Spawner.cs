@@ -19,7 +19,7 @@ public class Spawner : MonoBehaviour
         _cubeLogic.Reborn -= OnReborn;
     }
 
-    private void OnReborn(GameObject cube)
+    private void OnReborn(CubeLogic cube)
     {  
         int minAmountToSpawn = 2;
         int maxAmountToSpwan = 6;
@@ -29,7 +29,7 @@ public class Spawner : MonoBehaviour
         
         cube.transform.localScale /= 2;
         
-        _cubeLogic.ChanceDecrease();
+        cube.ChanceDecrease();
         
         Vector3 position = cube.transform.position;
 

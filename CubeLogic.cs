@@ -3,18 +3,13 @@ using UnityEngine;
 
 public class CubeLogic : MonoBehaviour
 {
-    [SerializeField] private float _chanceToReborn;
-    
-    public event Action<GameObject> Reborn;
+    [SerializeField] private float _chanceToReborn;    
 
     private int _minRandomChance = 0;
     private int _maxRandomChance = 99;
     private int _decreaseRate = 2;
     
-    public void ChanceDecrease()
-    {
-        _chanceToReborn /= _decreaseRate;
-    }
+    public event Action<CubeLogic> Reborn;
 
     private void OnMouseUpAsButton ()
     {
@@ -22,9 +17,14 @@ public class CubeLogic : MonoBehaviour
 
         if (_chanceToReborn > random)
         {
-            Reborn?.Invoke(gameObject);           
+            Reborn?.Invoke(this);           
         }        
             
         Destroy(gameObject);        
+    }
+
+    public void ChanceDecrease()
+    {
+        _chanceToReborn /= _decreaseRate;
     }
 }
