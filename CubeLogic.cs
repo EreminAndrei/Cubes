@@ -10,6 +10,9 @@ public class CubeLogic : MonoBehaviour
     private int _decreaseRate = 2;
     
     public event Action<CubeLogic> Reborn;
+    public event Action<CubeLogic> BlownUp;
+
+    public float ChanceToReborn => _chanceToReborn;
 
     private void OnMouseUpAsButton ()
     {
@@ -18,7 +21,11 @@ public class CubeLogic : MonoBehaviour
         if (_chanceToReborn > random)
         {
             Reborn?.Invoke(this);           
-        }        
+        }
+        else
+        {
+            BlownUp?.Invoke(this);
+        }
             
         Destroy(gameObject);        
     }
